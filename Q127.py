@@ -1,0 +1,38 @@
+"""
+LeetCode Q127: Word Ladder
+A transformation sequence from word beginWord to word endWord using a dictionary wordList is a sequence of words 
+beginWord -> s1 -> s2 -> ... -> sk such that:
+- Every adjacent pair of words differs by a single letter.
+- Every si for 1 <= i <= k is in wordList. Note that beginWord is not a wordList.
+- sk == endWord
+Given two words, beginWord and endWord, and a dictionary wordList, return the number of words in the shortest 
+transformation sequence from beginWord to endWord, or 0 if no such sequence exists.
+"""
+
+class Solution:
+    def ladderLength(self, beginWord: str, endWord: str, wordList: list[str]) -> int:
+        from collections import deque
+        
+        if endWord not in wordList:
+            return 0
+        
+        wordList = set(wordList)
+        queue = deque([(beginWord, 1)])
+        visited = {beginWord}
+        
+        while queue:
+            word, length = queue.popleft()
+            
+            if word == endWord:
+                return length
+            
+            for i in range(len(word)):
+                for c in 'abcdefghijklmnopqrstuvwxyz':
+                    new_word = word[:i] + c + word[i+1:]
+                    
+                    if new_word in wordList and new_word not in visited:
+                        visited.add(new_word)
+                        queue.append((new_word, length + 1))
+        
+        return 0
+
